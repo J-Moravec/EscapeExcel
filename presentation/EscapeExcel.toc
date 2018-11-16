@@ -1,0 +1,5 @@
+\beamer@endinputifotherversion {3.36pt}
+\select@language {english}
+\beamer@sectionintoc {1}{Introduction}{1}{0}{1}
+\beamer@sectionintoc {2}{Motivation}{9}{0}{2}
+\beamer@sectionintoc {3}{Project organization}{17}{0}{3}

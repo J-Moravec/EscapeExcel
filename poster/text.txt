@@ -1,0 +1,8 @@
+
+As analyses are getting more complex, organizing data and code is more and more challenging. If not actively prevented, one can often ends with several versions of dataset or processed outputs. This process can lead to increasingly long file names as "final" is repeatedly appended to the name. These workflows make it easy to lose track of which version of a file was used to produce a particular result. Often, incorporating new data or revising an analysis will require going through every file manually and studying what was actually done.
+
+This short workshop will teach you approaches and techniques that will make your data analysis projects more efficient. After completing this workshop, you will know how to organize your project and code, basic programming skills and how to improve them further and how to preserve and share your analyses so that they can be replicated with the same or new data by your colleagues or your future self.
+
+If you have any question, feel free to email me at: j.moravec@massey.ac.nz
+
+Please, bring your own laptop!

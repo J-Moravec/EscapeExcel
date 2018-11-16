@@ -1,0 +1,423 @@
+\documentclass[xcolor=dvipsnames,xcolor=table, 14p]{beamer}
+
+% language support and encoding of input and output
+\usepackage[english]{babel}
+\usepackage[utf8]{inputenc}
+% better font support
+\usepackage[T1]{fontenc}
+%\usepackage{lmodern}
+\usepackage{avant} % URW gothic fonts
+% graphical support
+\usepackage[table]{xcolor}
+\usepackage{graphicx}
+\usepackage[table]{xcolor} % beamer already loads this
+% typographical improvement
+\usepackage{microtype}
+\usepackage{tikz}
+\usetikzlibrary{shapes, positioning, shapes.arrows}
+\usepackage{pdfrender}
+\usepackage{anyfontsize}
+
+\definecolor{codegray}{gray}{0.7}
+\newcommand{\code}[1]{\colorbox{codegray}{\texttt{#1}}}
+\newcommand{\bs}{\textbackslash}
+
+% define colors:
+\definecolor{lightblue}{HTML}{7AB8FF}
+\definecolor{blue}{HTML}{3F92F2}
+\definecolor{green}{HTML}{17BF64}
+\definecolor{gray}{HTML}{414444}
+
+
+% setting up Beamer theme and look:
+\usetheme{Madrid}
+\setbeamertemplate{items}[circle]
+\setbeamertemplate{blocks}[rounded][shadow=true]
+\usecolortheme[named=gray]{structure}
+\setbeamertemplate{navigation symbols}{}
+
+\setbeamercolor{frametitle}{fg=green}
+\setbeamercolor{title}{fg=green}
+\setbeamercolor{subtitle}{fg=blue}
+\setbeamercolor{author}{fg=blue}
+
+\setbeamerfont{title}{series=\bfseries}
+\setbeamerfont{frametitle}{series=\bfseries}
+\setbeamerfont{author}{series=\bfseries}
+
+% author and presentation information:
+\author[J. M.]{Jiří Moravec}
+\title{Escape Excel}
+\subtitle{A quick introduction to programming, R, git and reproducibility}
+\date{}
+\titlegraphic{\includegraphics[width=2cm]{../assets/running_colored.pdf}}
+
+\setbeamertemplate{title page}{%
+\begin{tikzpicture}[remember picture,overlay]
+% colored rectangle on bottom half of page
+\fill[gray]([yshift=15pt]current page.west) rectangle (current page.south east);
+
+% authors name
+\node[anchor=east] at ([yshift=25pt]current page.east) (author)
+  {\parbox[t]{.8\paperwidth}{\raggedleft%
+    \usebeamerfont{author}\usebeamercolor[fg]{author}{\large\insertauthor}}};
+
+% titlegraphics
+\node[anchor=south west] 
+  at ([yshift=10pt]current page.west) (logo)
+  {\parbox[t]{\paperwidth}{\centering%
+    \usebeamercolor[fg]{titlegraphic}\inserttitlegraphic}};
+
+% title
+\node[anchor=east]
+  at ([yshift=-10pt,xshift=-20pt]current page.east) (title)
+  {\parbox[t]{0.9\textwidth}{\centering%
+    \usebeamerfont{title}\usebeamercolor[fg]{title}\Huge\inserttitle
+    }};
+\node[anchor=east]
+  at ([yshift=-50pt,xshift=-20pt]current page.east) (subtitle)
+  {\parbox[t]{.9\paperwidth}{\centering
+    \usebeamerfont{subtitle}\usebeamercolor[fg]{subtitle}{\Large \insertsubtitle}}};
+\end{tikzpicture}
+}
+
+
+
+\begin{document}
+\section{Introduction}
+\begin{frame}[plain]
+    \maketitle
+\end{frame}
+
+
+\begin{frame}\frametitle{What is this about?}
+    \begin{itemize}
+        \setlength\itemsep{1em}
+        \item Project organization -- files, folders and data
+        \item Introduction to script-based analyses
+        \item Introduction to pipelines
+        \item Some R and git
+    \end{itemize}
+\end{frame}
+
+
+\begin{frame}\frametitle{What is this NOT about?}
+    \begin{itemize}
+        \setlength\itemsep{1em}
+        \item R workshop
+        \item Robust tutorial to programming
+        \item Extensive tutorial to git\\(most of the time, you are using only 3 commands anyway)
+    \end{itemize}
+\end{frame}
+
+
+\begin{frame}{}
+    \begin{tikzpicture}[remember picture,overlay]
+        \node[anchor=south] at ([yshift=-53pt]current page.center) (running) {
+            \includegraphics[height=3cm]{../assets/running.pdf}
+            };
+        \fill[gray]([yshift=-50pt]current page.west) rectangle (current page.south east);
+        \visible<2->{
+            \node[anchor=center]
+                at ([yshift=50pt]current page.south)
+                {\textcolor{blue}{\bf \Large Showing you a direction!}};
+            }
+        \visible<3->{
+            \node[single arrow, draw=gray, anchor=west, fill=gray, shape border rotate=180]
+                at (current page.west) (thisway)
+                {\textcolor{blue}{\bf \Large This way!}};
+            \node[right = 2cm of thisway] (start) {};
+            }
+
+    \end{tikzpicture}
+\end{frame}
+
+
+\begin{frame}<1-2>[label=content]\frametitle{Program:}
+    \begin{enumerate}
+        \setlength\itemsep{1em}
+        \item \alert<2>{Motivation}
+        \item \alert<3>{Project organization}
+        \item \alert<4>{Pipelines and script-based analyses}
+        \item \alert<5>{Introduction to programming}
+        \item \alert<6>{git}
+    \end{enumerate}
+\end{frame}
+\section{Motivation}
+
+\begin{frame}\frametitle{Motivation:}
+    \begin{tikzpicture}[align=center, node distance = 2cm, remember picture,overlay]
+        \node[anchor=north] at (current page.center) (excel) {\includegraphics[height=1.5cm]{../assets/Excel_logo.pdf}};
+        \node[above left = of excel] (data) {\Large data};
+        \node[above = of excel] (code) {\Large code};
+        \node[above right = of excel] (results) {\Large results};
+        \draw[->, line width=3pt, gray]
+            (data) edge (excel)
+            (code) edge (excel)
+            (results) edge (excel);
+        \visible<2->{
+            \node at (current page.center) (bad) {\textcolor{red}{\bf \fontsize{50}{60}\selectfont BAD}};
+            }
+    \end{tikzpicture}
+\end{frame}
+
+\begin{frame}\frametitle{Motivation:}
+    \begin{center}
+    \Large \only<3->{Collaborator\_}analysis\only<2->{\_final}\only<4->{Final}.xls
+    \end{center}
+\end{frame}
+
+\begin{frame}<1-2>[label=motivation_folders]\frametitle{
+    \only<1-2>{Motivation:}
+    \only<3>{Project organization}
+    }
+    \begin{columns}
+        \centering
+        \begin{column}{0.33\textwidth}
+            \begin{itemize}
+                \setbeamertemplate{itemize items}{
+                    \includegraphics[height=0.5cm]{../assets/folder.pdf}
+                    }
+                \item Data
+                \item Scripts
+                \item Results
+                \only<2->{
+                \item Intermediaries
+                \item Documentation
+                }
+            \end{itemize}
+        \end{column}
+        \begin{column}{0.33\textwidth}
+            \begin{itemize}
+                \setbeamertemplate{itemize items}{
+                    \includegraphics[height=0.7cm]{../assets/file2.pdf}
+                    }
+                \item makefile
+                \item run.sh
+                \item README.md
+            \end{itemize}
+        \end{column}
+    \end{columns}
+\end{frame}
+
+
+\section{Project organization}
+
+%\begin{frame}\frametitle{Program:}
+%    \begin{enumerate}
+%        \setlength\itemsep{1em}
+%        \item Motivation
+%        \item \alert{Project organization}
+%        \item Pipelines and script-based analyses
+%        \item Introduction to programming
+%        \item git
+%    \end{enumerate}
+%\end{frame}
+
+\againframe<3>{content}
+
+\begin{frame}\frametitle{Project organization}
+    Make sure you have:
+    \begin{enumerate}
+        \item a single folder for entire project
+        \item reasonable naming scheme
+        \item good folder structure
+    \end{enumerate}
+\end{frame}
+
+\againframe<3>{motivation_folders}
+
+\begin{frame}\frametitle{Project organization}
+    \begin{tabular}{ll}From  & \it A Guide to Reproducible Code\\& \it in Ecology and Evolution\end{tabular}\uncover<2->{\textcolor{red}{\bf Notice the names!}}
+    \begin{columns}
+        \centering
+        \begin{column}{0.20\textwidth}
+            \begin{itemize}
+                \setbeamertemplate{itemize items}{
+                    \includegraphics[height=0.5cm]{../assets/folder.pdf}
+                    }
+                \item data
+                \item doc
+                \item figs
+                \item output
+                \item R
+            \end{itemize}
+        \end{column}
+        \begin{column}{0.5\textwidth}
+            \begin{itemize}
+                \setbeamertemplate{itemize items}{
+                    \includegraphics[height=0.7cm]{../assets/file2.pdf}
+                    }
+                \item 01\_download-data.R
+                \item 02\_clean-data.R
+                \item 03\_exploratory-analysis.R
+                \item 04\_fit-models.R
+                \item 05\_generate-figures.R
+                \item README.md
+            \end{itemize}
+        \end{column}
+    \end{columns}
+\end{frame}
+
+\againframe<4>{content}
+
+\begin{frame}\frametitle{Pipelines}
+    \begin{tikzpicture}[remember picture,overlay]
+    \tikzstyle{edge}=[->, line width=3pt, gray]
+        \node[anchor=west]
+            at ([yshift=-2.5cm, xshift=0.25cm]current page.north west)
+            (data) {\Large data};
+        \node[right = 2cm of data] (results) {\Large results};
+        \draw[edge] (data) edge node[above] {analysis} (results);
+        \uncover<2->{
+            \node[below = of results] (data2) {\Large data};
+            \node[right = 2cm of data2] (results2) {\Large results};
+            \draw[edge] (data2) edge node[above] {analysis} (results2);
+            \draw[edge] (results) edge (data2);
+            }
+        \uncover<3->{
+        \node[below = of results2] (data3) {\Large data};
+        \node[right = 2cm of data3] (results3) {\Large results};
+        \draw[edge] (data3) edge node[above] {analysis} (results3);
+        \draw[edge] (results2) edge (data3);
+        }
+        \uncover<4->{
+            \node at ([yshift=1cm]current page.south) {\Large Functions, \alert<5->{Scripts}, smaller or bigger analyses}; 
+            }
+    \end{tikzpicture}
+\end{frame}
+
+\begin{frame}\frametitle{Script-based analyses}
+\begin{itemize}
+    \item repeatability
+    \item documented process
+    \item (including any data modification and filtering)
+    \item smaller effort to modify
+    \item can be repeated by just running the run script
+\end{itemize}
+\end{frame}
+
+\againframe<5>{content}
+
+\begin{frame}\frametitle{Introduction to programming}
+Why \textcolor{blue}{\bf R}?
+\begin{itemize}
+    \item easy to get data into R
+    \item closer to statistics than other programming languages
+    \item graphical capabilities
+    \item huge library of packages for essentially anything
+    \item FREE and OPEN SOURCE
+\end{itemize}
+\end{frame}
+
+\begin{frame}\frametitle{Introduction to programming}
+Helpful tips:
+\begin{itemize}
+    \item Scripts:
+    \begin{itemize}
+        \item self-contained
+        \item doing one thing well rather than many things badly
+    \end{itemize}
+    \item Functions:
+    \begin{itemize}
+        \item self-contained
+        \item small
+        \item use them instead of repeating code
+        \item use them for a well-defined tasks and concepts
+        \item documentation and comments
+    \end{itemize}
+    \item Data:
+    \begin{itemize}
+        \item text human readable files
+        \item not binary proprietary formats
+        \item modify with scripts
+        \item never overwrite
+    \end{itemize}
+\end{itemize}
+\end{frame}
+
+\begin{frame}\frametitle{Introduction to programming}
+Helpful tips (cont):
+\begin{itemize}
+    \item Paths:
+    \begin{itemize}
+        \item use relative rather than absolute
+        \item relative \code{data\bs my\_data.csv}
+        \item absolute: \code{c:\bs my\_projects\bs data\bs my\_data.csv}
+    \end{itemize}
+    \item Figures:
+    \begin{itemize}
+        \item generate with scripts
+        \item easier to modify
+        \item easier to change once data or analysis changes
+    \end{itemize}
+\end{itemize}
+\end{frame}
+
+
+
+\begin{frame}{}
+    \begin{center}
+        \textcolor{blue}{\LARGE \bf Live coding excercise!}
+    \end{center}
+\end{frame}
+
+\againframe<6>{content}
+
+\begin{frame}\frametitle{Git}
+\begin{columns}
+    \begin{column}{0.45\textwidth}
+        Git is:
+        \begin{itemize}
+            \item version control system
+            \item track all changes in text files (data, code)
+            \item tracks where the changes were done
+            \item FREE and OPEN-SOURCE
+        \end{itemize}
+    \end{column}
+    \begin{column}{0.45\textwidth}
+        \centering
+        \includegraphics[width=0.9\textwidth]{../assets/git_logo.eps}
+    \end{column}
+\end{columns}
+\end{frame}
+
+\begin{frame}\frametitle{Git}
+Git commands:
+\begin{itemize}
+    \item \code{git init}
+    \item \code{git clone <path or url>}
+    \item \code{git add file1 file2} or \code{git add -A}
+    \item \code{git commit -m "Information about commit"}
+    \item \code{git push remote\_repository branch}
+    \item \code{git pull remote\_repository branch}
+    \item \code{git status}
+\end{itemize}
+\end{frame}
+
+\begin{frame}\frametitle{Sources and guides}
+{\Large \bf R}
+\begin{itemize}
+    \item Start with:  \url{http://tryr.codeschool.com}
+    \item Continue with: \url{http://tryr.codeschool.com}
+    \item Advanced R: \url{http://adv-r.had.co.nz/}
+\end{itemize}
+{\Large \bf git}
+\begin{itemize}
+    \item Start with: \url{https://guides.github.com/introduction/git-handbook/}
+    \item Documentation: \url{https://git-scm.com/docs}
+    \item Book: \url{https://git-scm.com/book/en/v2}
+\end{itemize}
+{\large \bf A Guide to Reproducible Code in Ecology and Evolution}
+\begin{itemize}
+    \item \url{https://tinyurl.com/reproducibleCode}
+    \item \href{https://www.britishecologicalsociety.org/wp-content/uploads/2017/12/guide-to-reproducible-code.pdf?fbclid=IwAR00qqChWaXk1o1_gjOtPkcD_y21n3BtLItdM07B8VyjmdrOLAHC6UEk0aQ}{original link}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{}
+    \begin{center}
+        \textcolor{blue}{\LARGE \bf I want your feedback!}
+    \end{center}
+\end{frame}
+\end{document}

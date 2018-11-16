@@ -1,0 +1,5 @@
+Live coding exercise:
+* download some data
+* read them in R
+* do some stats
+* save nicely formatted result
