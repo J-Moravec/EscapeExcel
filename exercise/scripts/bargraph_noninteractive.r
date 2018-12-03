@@ -1,3 +1,5 @@
+#!/usr/bin/Rscript
+
 read_table = function(path){
     read.table(path, sep=",", header=TRUE, stringsAsFactors=FALSE)
     }
@@ -19,4 +21,9 @@ main = function(input, output){
         barplot(averages, col=lightred)
     invisible(dev.off())
 
+    }
+
+if(!interactive()){
+    args = commandArgs(TRUE)
+    main(args[1], args[2])
     }
