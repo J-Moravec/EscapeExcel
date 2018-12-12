@@ -17,7 +17,33 @@
 }
 {
     \oldendverbatim
-    \vskip-2em\@minipagefalse % The size required for this negative space is probably in some variable
+    \vskip-1em\@minipagefalse % The size required for this negative space is probably in some variable
     \endMakeFramed
 }
 \makeatother
+
+
+\setlength{\parskip}{5mm plus 4mm minus 4mm}
+
+
+\usepackage{titlesec}
+\titlespacing\section{0pt}{12pt plus 4pt minus 2pt}{0pt plus 2pt minus 2pt}
+\titlespacing\subsection{0pt}{8pt plus 4pt minus 2pt}{0pt plus 2pt minus 2pt}
+\titlespacing\subsubsection{0pt}{6pt plus 4pt minus 2pt}{0pt plus 2pt minus 2pt}
+
+
+\titleformat*{\section}{\LARGE\bfseries\sffamily}
+\titleformat*{\subsection}{\Large\bfseries\sffamily}
+\titleformat*{\subsubsection}{\large\bfseries\sffamily}
+\titleformat*{\paragraph}{\large\bfseries\sffamily}
+\titleformat*{\subparagraph}{\large\bfseries\sffamily}
+
+
+\topsep=0pt \partopsep=0pt
+
+\title{\bfseries\sffamily A short introduction to R}
+
+\hypersetup{
+    colorlinks=true,
+    allcolors=blue
+    }

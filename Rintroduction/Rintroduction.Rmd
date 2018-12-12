@@ -11,6 +11,7 @@ output:
         keep_tex: false
         includes:
             in_header: highlight_echo.tex
+subparagraph: yes
 documentclass: article
 fontsize: 12pt
 geometry: margin=1in
